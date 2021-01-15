@@ -692,10 +692,27 @@ function getActInfo() {
     })
 }
 
+function taskPostUrl1(function_id, body) {
+    return {
+        url: `https://lzdz-isv.isvjcloud.com/${function_id}`,
+        body: body,
+        headers: {
+            'Host': 'lzdz-isv.isvjcloud.com',
+            'Accept': 'application/json',
+            'Accept-Language': 'zh-cn',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Origin': 'https://lzdz-isv.isvjcloud.com',
+            'User-Agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)',
+            'Referer': `https://lzdz-isv.isvjcloud.com/dingzhi/book/develop/activity?activityId=${ACT_ID}`,
+            'Cookie': `${cookie} isvToken=${$.isvToken};`
+        }
+    }
+}
+
 function getToken() {
     return new Promise(resolve => {
         let body = `userId=${$.shopId}&token=${$.token2}&fromType=APP`
-        $.post(taskPostUrl('customer/getMyPing', body), async (err, resp, data) => {
+        $.post(taskPostUrl1('customer/getMyPing', body), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${err},${jsonParse(resp.body)['message']}`)
