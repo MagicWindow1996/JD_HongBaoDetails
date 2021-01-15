@@ -585,6 +585,28 @@ async function getJoy() {
         })
     })
 }
+function getIsvToken() {
+    return new Promise(resolve => {
+        let body = 'body=%7B%22to%22%3A%22https%3A%5C%2F%5C%2Flzdz-isv.isvjcloud.com%5C%2Fdingzhi%5C%2Fbook%5C%2Fdevelop%5C%2Factivity%3FactivityId%3Ddz2010100034444201%22%2C%22action%22%3A%22to%22%7D&build=167490&client=apple&clientVersion=9.3.2&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=f3eb9660e798c20372734baf63ab55f2&st=1610267023622&sv=111'
+        $.post(jdUrl('genToken', body), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${err},${jsonParse(resp.body)['message']}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        $.isvToken = data['tokenKey']
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 
 function jdUrl(functionId, body) {
     return {
@@ -715,13 +737,13 @@ function getToken() {
         $.post(taskPostUrl1('customer/getMyPing', body), async (err, resp, data) => {
             try {
                 if (err) {
-                    console.log(`${err},${jsonParse(resp.body)['message']}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                    console.log(`${err},${jsonParse(resp.body)['message']}`);
+                    console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
                         console.log(data);
-                        $.token = data.data.secretPin
+                        $.token = data.data.secretPin;
                     }
                 }
             } catch (e) {
