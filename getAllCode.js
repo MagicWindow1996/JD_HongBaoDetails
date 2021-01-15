@@ -29,6 +29,8 @@ var jdJoy = '';
 var jdCash = '';
 //京东图书
 var jdBookShop = '';
+//京喜农场
+var jxNc = '';
 
 
 if ($.isNode()) {
@@ -77,24 +79,27 @@ if ($.isNode()) {
     jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('@'));
     jdCash = jdCash.substring(0, jdCash.lastIndexOf('@'));
     jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('@'));
+    jxNc = jxNc.substring(0, jxNc.lastIndexOf('@'));
 
-    console.log('京东工厂=' + jdFactory);
+    console.log('【京东工厂】' + jdFactory);
 
-    console.log('种豆得豆=' + jdBean);
+    console.log('【种豆得豆】' + jdBean);
 
-    console.log('京东农场=' + jdFruit);
+    console.log('【京东农场】' + jdFruit);
 
-    console.log('京东萌宠=' + jdPet);
+    console.log('【京东萌宠】' + jdPet);
 
-    console.log('京喜工厂=' + jxFactory);
+    console.log('【京喜工厂】' + jxFactory);
 
-    console.log('京东赚赚=' + jdZz);
+    console.log('【京东赚赚】' + jdZz);
 
-    console.log('疯狂的JOY=' + jdJoy);
+    console.log('【疯狂的JOY】' + jdJoy);
 
-    console.log('京东领现金=' + jdCash);
+    console.log('【京东领现金】' + jdCash);
 
-    console.log('京东口袋书店=' + jdBookShop);
+    console.log('【京东口袋书店】' + jdBookShop);
+
+    console.log('【京喜农场】' + jxNc);
 
 })()
     .catch((e) => {
@@ -808,6 +813,40 @@ function getActContent() {
     })
 }
 
+function getJxnc() {
+    return new Promise(async resolve => {
+        $.get({
+            url: `https://wq.jd.com/cubeactive/farm/query?type=1&farm_jstoken=''&phoneid=''&timestamp=''&sceneval=2&g_login_type=1&callback=whyour&_=${Date.now()}&g_ty=ls`,
+            headers: {
+                Cookie: cookie,
+                Accept: `*/*`,
+                Connection: `keep-alive`,
+                Referer: `https://st.jingxi.com/pingou/dream_factory/index.html`,
+                'Accept-Encoding': `gzip, deflate, br`,
+                Host: `wq.jd.com`,
+                'Accept-Language': `zh-cn`,
+            },
+            timeout: 10000,
+        }, async (err, resp, data) => {
+            try {
+                const res = data.match(/try\{whyour\(([\s\S]*)\)\;\}catch\(e\)\{\}/)[1];
+                const {
+                    detail,
+                    msg,
+                    task = [],
+                    retmsg,
+                    ...other
+                } = JSON.parse(res);
+                jxNc += other.smp + '@';
+            } catch (e) {
+                $.logErr(e, resp);
+            } finally {
+                resolve(true);
+            }
+        });
+    });
+}
+
 async function getShareCode() {
     await getJdFactory();
     await getJxFactory();
@@ -827,6 +866,8 @@ async function getShareCode() {
     await getToken();
     await getUserInfo();
     await getActContent();
+
+    await getJxnc();
 }
 
 function safeGet(data) {
