@@ -624,6 +624,34 @@ function getIsvToken2() {
     })
 }
 
+
+function getActCk() {
+    return new Promise(resolve => {
+        $.get(taskUrl("dingzhi/book/develop/activity", `activityId=${ACT_ID}`), (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${err},${jsonParse(resp.body)['message']}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if ($.isNode())
+                        for (let ck of resp['headers']['set-cookie']) {
+                            cookie = `${cookie}; ${ck.split(";")[0]};`
+                        }
+                    else {
+                        for (let ck of resp['headers']['Set-Cookie'].split(',')) {
+                            cookie = `${cookie}; ${ck.split(";")[0]};`
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
 function getActInfo() {
     return new Promise(resolve => {
         $.post(taskPostUrl('dz/common/getSimpleActInfoVo', `activityId=${ACT_ID}`), async (err, resp, data) => {
