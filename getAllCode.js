@@ -703,6 +703,7 @@ function getToken() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
+                        console.log(data);
                         $.token = data.data.secretPin
                     }
                 }
