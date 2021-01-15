@@ -1,7 +1,7 @@
 /*
 自动获取所有互助码并拼接
  */
-const $ = new Env("互助码提交");
+const $ = new Env("互助码获取");
 const JD_API_HOST = "https://api.m.jd.com/client.action";
 const ACT_ID = 'dz2010100034444201',
     shareUuid = '57b32cc876dc4d78986fed10eb95d8be';
@@ -585,6 +585,7 @@ async function getJoy() {
         })
     })
 }
+
 function getIsvToken() {
     return new Promise(resolve => {
         let body = 'body=%7B%22to%22%3A%22https%3A%5C%2F%5C%2Flzdz-isv.isvjcloud.com%5C%2Fdingzhi%5C%2Fbook%5C%2Fdevelop%5C%2Factivity%3FactivityId%3Ddz2010100034444201%22%2C%22action%22%3A%22to%22%7D&build=167490&client=apple&clientVersion=9.3.2&openudid=53f4d9c70c1c81f1c8769d2fe2fef0190a3f60d2&sign=f3eb9660e798c20372734baf63ab55f2&st=1610267023622&sv=111'
@@ -808,21 +809,22 @@ function getActContent() {
 }
 
 async function getShareCode() {
-    await getJdFactory()
-    await getJxFactory()
-    await getJxNc()
-    await getJdPet()
-    await getPlantBean()
-    await getJDFruit()
-    await getJdZZ()
-    await getJoy()
+    await getJdFactory();
+    await getJxFactory();
+    await getJxNc();
+    await getJdPet();
+    await getPlantBean();
+    await getJDFruit();
+    await getJdZZ();
+    await getJoy();
     await getJdCash();
 
     //口袋书店
-    await getIsvToken2()
-    await getActCk()
-    await getActInfo()
-    await getToken()
+    await getIsvToken();
+    await getIsvToken2();
+    await getActCk();
+    await getActInfo();
+    await getToken();
     await getUserInfo();
     await getActContent();
 }
