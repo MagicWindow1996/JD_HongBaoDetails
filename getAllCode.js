@@ -1,5 +1,7 @@
 /*
 自动获取所有互助码并拼接
+作者；Aerozb（Low）
+https: //github.com/Aerozb/JD_HongBaoDetails/blob/main/getAllCode.js
  */
 const $ = new Env("互助码获取");
 const JD_API_HOST = "https://api.m.jd.com/client.action";
@@ -64,17 +66,17 @@ if ($.isNode()) {
             await getShareCode();
         }
     }
-    jdBean = jdBean.substring(0, jdBean.lastIndexOf('@')).split('@');
-    jdFruit = jdFruit.substring(0, jdFruit.lastIndexOf('@')).split('@');
-    jdPet = jdPet.substring(0, jdPet.lastIndexOf('@')).split('@');
-    jxFactory = jxFactory.substring(0, jxFactory.lastIndexOf('@')).split('@');
-    jdFactory = jdFactory.substring(0, jdFactory.lastIndexOf('@')).split('@');
+    jdBean = jdBean.substring(0, jdBean.lastIndexOf('@'));
+    jdFruit = jdFruit.substring(0, jdFruit.lastIndexOf('@'));
+    jdPet = jdPet.substring(0, jdPet.lastIndexOf('@'));
+    jxFactory = jxFactory.substring(0, jxFactory.lastIndexOf('@'));
+    jdFactory = jdFactory.substring(0, jdFactory.lastIndexOf('@'));
     if (jdZz != '') {
-        jdZz = jdZz.substring(0, jdZz.lastIndexOf('@')).split('@');
+        jdZz = jdZz.substring(0, jdZz.lastIndexOf('@'));
     }
-    jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('@')).split('@');
-    jdCash = jdCash.substring(0, jdCash.lastIndexOf('@')).split('@');
-    jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('@')).split('@');
+    jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('@'));
+    jdCash = jdCash.substring(0, jdCash.lastIndexOf('@'));
+    jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('@'));
 
     console.log('京东工厂=' + jdFactory);
 
@@ -743,7 +745,6 @@ function getToken() {
                 } else {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
-                        console.log(data);
                         $.token = data.data.secretPin;
                     }
                 }
@@ -768,7 +769,6 @@ function getUserInfo() {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
                         if (data.data) {
-                            console.log(`用户【${data.data.nickname}】信息获取成功`)
                             $.pinImg = data.data.yunMidImageUrl;
                             $.nick = data.data.nickname;
                         }
