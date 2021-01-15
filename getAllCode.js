@@ -624,6 +624,22 @@ function getIsvToken2() {
     })
 }
 
+function taskUrl(function_id, body) {
+    return {
+        url: `https://lzdz-isv.isvjcloud.com/${function_id}?${body}`,
+        headers: {
+            'Host': 'lzdz-isv.isvjcloud.com',
+            'Accept': 'application/x.jd-school-island.v1+json',
+            'Source': '02',
+            'Accept-Language': 'zh-cn',
+            'Content-Type': 'application/json;charset=utf-8',
+            'Origin': 'https://lzdz-isv.isvjcloud.com',
+            'User-Agent': 'JD4iPhone/167490 (iPhone; iOS 14.2; Scale/3.00)',
+            'Referer': `https://lzdz-isv.isvjcloud.com/dingzhi/book/develop/activity?activityId=${ACT_ID}`,
+            'Cookie': `${cookie} IsvToken=${$.isvToken};`
+        }
+    }
+}
 
 function getActCk() {
     return new Promise(resolve => {
