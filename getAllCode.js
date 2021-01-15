@@ -693,7 +693,7 @@ function getActCk() {
 
 function getActInfo() {
     return new Promise(resolve => {
-        $.post(taskPostUrl('dz/common/getSimpleActInfoVo', `activityId=${ACT_ID}`), async (err, resp, data) => {
+        $.post(taskPostUrl1('dz/common/getSimpleActInfoVo', `activityId=${ACT_ID}`), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${err},${jsonParse(resp.body)['message']}`)
@@ -759,7 +759,7 @@ function getToken() {
 function getUserInfo() {
     return new Promise(resolve => {
         let body = `pin=${encodeURIComponent($.token)}`
-        $.post(taskPostUrl('wxActionCommon/getUserInfo', body), async (err, resp, data) => {
+        $.post(taskPostUrl1('wxActionCommon/getUserInfo', body), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${err},${jsonParse(resp.body)['message']}`)
@@ -786,7 +786,7 @@ function getUserInfo() {
 function getActContent() {
     return new Promise(resolve => {
         let body = `activityId=${ACT_ID}&pin=${encodeURIComponent($.token)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${shareUuid}`
-        $.post(taskPostUrl('dingzhi/book/develop/activityContent', body), async (err, resp, data) => {
+        $.post(taskPostUrl1('dingzhi/book/develop/activityContent', body), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${err},${jsonParse(resp.body)['message']}`)
@@ -912,7 +912,7 @@ function jsonParse(str) {
             return JSON.parse(str);
         } catch (e) {
             console.log(e);
-            $.msg($.name, '', '不要在BoxJS手动复制粘贴修改cookie')
+            $.msg(str);
             return [];
         }
     }
