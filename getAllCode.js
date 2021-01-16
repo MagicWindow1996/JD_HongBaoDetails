@@ -81,26 +81,54 @@ if ($.isNode()) {
     jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('@'));
     jxNc = jxNc.substring(0, jxNc.lastIndexOf('@'));
 
-    console.log('【京东工厂】' + jdFactory);
+    // console.log('【京东工厂】' + jdFactory);
 
-    console.log('【种豆得豆】' + jdBean);
+    // console.log('【种豆得豆】' + jdBean);
 
-    console.log('【京东农场】' + jdFruit);
+    // console.log('【京东农场】' + jdFruit);
 
-    console.log('【京东萌宠】' + jdPet);
+    // console.log('【京东萌宠】' + jdPet);
 
-    console.log('【京喜工厂】' + jxFactory);
+    // console.log('【京喜工厂】' + jxFactory);
 
-    console.log('【京东赚赚】' + jdZz);
+    // console.log('【京东赚赚】' + jdZz);
 
-    console.log('【疯狂的JOY】' + jdJoy);
+    // console.log('【疯狂的JOY】' + jdJoy);
 
-    console.log('【京东领现金】' + jdCash);
+    // console.log('【京东领现金】' + jdCash);
 
-    console.log('【京东口袋书店】' + jdBookShop);
+    // console.log('【京东口袋书店】' + jdBookShop);
 
-    console.log('【京喜农场】' + jxNc);
-
+    // console.log('【京喜农场】' + jxNc);
+    var t1 = '&' + jdFruit;
+    var t2 = '&' + jdPet;
+    var t3 = '&' + jdBean;
+    var t4 = '&' + jdFactory;
+    var t5 = '&' + jxFactory;
+    var t6 = '&' + jdZz;
+    var t7 = '&' + jdJoy;
+    var t8 = '&' + jdBookShop;
+    var t9 = '&' + jxNc;
+    for (let i = 1; i < cookiesArr.length; i++) {
+        jdFruit = jdFruit + t1;
+        jdPet = jdPet + t2;
+        jdBean = jdBean + t3;
+        jdFactory = jdFactory + t4;
+        jxFactory = jxFactory + t5;
+        jdZz = jdZz + t6;
+        jdJoy = jdJoy + t7;
+        jdBookShop = jdBookShop + t8;
+        jxNc = jxNc + t9;
+    }
+    console.log('env.FRUITSHARECODES = ' + jdFruit);
+    console.log('env.PETSHARECODES =' + jdPet);
+    console.log('env.PLANT_BEAN_SHARECODES =' + jdBean);
+    console.log('env.DDFACTORY_SHARECODES = ' + jdFactory);
+    console.log('env.DREAM_FACTORY_SHARE_CODES =' + jxFactory);
+    console.log('env.JDZZ_SHARECODES =' + jdZz);
+    console.log('env.JDJOY_SHARECODES =' + jdJoy);
+    console.log('env.BOOKSHOP_SHARECODES =' + jdBookShop);
+    console.log('env.JXNC_SHARECODES =' + jxNc);
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
