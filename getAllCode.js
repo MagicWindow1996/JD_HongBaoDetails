@@ -120,15 +120,17 @@ if ($.isNode()) {
         jdBookShop = jdBookShop + t8;
         jxNc = jxNc + t9;
     }
-    console.log('env.FRUITSHARECODES = ' + jdFruit);
-    console.log('env.PETSHARECODES =' + jdPet);
-    console.log('env.PLANT_BEAN_SHARECODES =' + jdBean);
-    console.log('env.DDFACTORY_SHARECODES = ' + jdFactory);
-    console.log('env.DREAM_FACTORY_SHARE_CODES =' + jxFactory);
-    console.log('env.JDZZ_SHARECODES =' + jdZz);
-    console.log('env.JDJOY_SHARECODES =' + jdJoy);
-    console.log('env.BOOKSHOP_SHARECODES =' + jdBookShop);
-    console.log('env.JXNC_SHARECODES =' + jxNc);
+    console.log('env.FRUITSHARECODES = ' + '\'' + jdFruit + '\'' + ';' + '\n');
+    console.log('env.PETSHARECODES =' + '\'' + jdPet + '\'' + ';' + '\n');
+    console.log('env.PLANT_BEAN_SHARECODES =' + '\'' + jdBean + '\'' + ';' + '\n');
+    console.log('env.DDFACTORY_SHARECODES = ' + '\'' + jdFactory + '\'' + ';' + '\n');
+    console.log('env.DREAM_FACTORY_SHARE_CODES =' + '\'' + jxFactory + '\'' + ';' + '\n');
+    if (jdZz != '&&') {
+        console.log('env.JDZZ_SHARECODES =' + '\'' + jdZz + '\'' + ';' + '\n');
+    }
+    console.log('env.JDJOY_SHARECODES =' + '\'' + jdJoy + '\'' + ';' + '\n');
+    console.log('env.BOOKSHOP_SHARECODES =' + '\'' + jdBookShop + '\'' + ';' + '\n');
+    console.log('env.JXNC_SHARECODES =' + '\'' + jxNc + '\'' + ';' + '\n');
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -136,7 +138,6 @@ if ($.isNode()) {
     .finally(() => {
         $.done();
     })
-
 
 function getJdFactory() {
     return new Promise(resolve => {
