@@ -60,8 +60,8 @@ if ($.isNode()) {
     }
 
     console.clear();
-    console.log(pon + (process.env.SCKEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
-    notify.sendNotify($.name, pon + (process.env.SCKEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    console.log(pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    notify.sendNotify($.name, pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -268,7 +268,7 @@ function cal(data, nickName) {
             '后天过期京东红包总额:' + expiresDATJD + lineFeed +
             '后天过期京东优惠小程序红包总额:' + expiresDATJDYH;
     }
-    pushDetailNotify += lineFeed + (process.env.SCKEY ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
+    pushDetailNotify += lineFeed + (process.env.PUSH_KEY ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     return {
         pushOverviewNotify,
         pushDetailNotify
