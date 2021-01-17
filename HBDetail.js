@@ -1,4 +1,5 @@
 /*
+ * 京东京喜红包详情脚本， 用来查看每个账户的今明后天各个平台红包详情
  * @Author: Aerozb（Low） https://github.com/Aerozb/JD_HongBaoDetails
  */
 const $ = new Env('京东京喜红包详情');
@@ -9,8 +10,8 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [],
     cookie = '',
     message;
-let redexpires = [],
-    pushNotify = []
+let pon = '',
+    pdn = '';
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -42,7 +43,6 @@ if ($.isNode()) {
             $.nickName = '';
             message = '';
             await TotalBean();
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {
                     "open-url": "https://bean.m.jd.com/"
@@ -53,11 +53,15 @@ if ($.isNode()) {
                 }
                 continue
             }
-            await getHB(`${$.nickName}`);
-            await putMsg();
+            let push = await getHB(`${$.nickName}`);
+            pon += push.pushOverviewNotify;
+            pdn += push.pushDetailNotify;
         }
     }
-    await notify.sendNotify(`${$.name}通知`, redexpires + pushNotify);
+
+    console.clear();
+    console.log(pon + (process.env.SCKEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    notify.sendNotify($.name, pon + (process.env.SCKEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -66,12 +70,6 @@ if ($.isNode()) {
         $.done();
     })
 
-function putMsg() {
-    return new Promise(resolve => {
-        //console.log(pushNotify);
-        resolve();
-    })
-}
 
 function TotalBean() {
     return new Promise(resolve => {
@@ -127,7 +125,7 @@ function jsonParse(str) {
 }
 
 function getHB(nickName) {
-    new Promise(async resolve => {
+    return new Promise(async resolve => {
         const options = {
             "url": 'https://api.m.jd.com/api?appid=myhongbao_pc&functionId=myhongbao_list_usable&body={"appId":"pcHongBao","appToken":"f7e5532105b80989","platform":"0","platformId":"pcHongBao","platformToken":"f7e5532105b80989","organization":"JD","pageNum":1}&jsonp=jsonp_' + new Date().getTime() + '_95971',
             "headers": {
@@ -141,19 +139,20 @@ function getHB(nickName) {
                 "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0") : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
             }
         }
-
         $.post(options, (err, resp, data) => {
             try {
+                let push = new Object();
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     if (data) {
-                        cal(data, nickName);
+                        push = cal(data, nickName);
                     } else {
                         console.log(`京东服务器返回空数据`)
                     }
                 }
+                resolve(push);
             } catch (e) {
                 $.logErr(e, resp)
             } finally {
@@ -164,8 +163,8 @@ function getHB(nickName) {
 }
 
 function cal(data, nickName) {
-    var json = eval(data.substr(25));
 
+    var json = eval(data.substr(25));
     var hbs = json.hongBaoList;
     var jx = 0;
     var jd = 0;
@@ -231,83 +230,49 @@ function cal(data, nickName) {
     }
 
     subHB = add(add(jd, jx), jdyh);
-    console.clear();
-    console.log('红包总额:' + subHB);
-    console.log('▼▼▼▼▼▼账号：' + nickName + ' - ' + '各平台金额▼▼▼▼▼▼');
-    console.log('京喜红包总额:' + jx);
-    console.log('京东红包总额:' + jd);
-    console.log('京东优惠小程序红包总额:' + jdyh);
-    console.log('===================');
-    console.log('今天过期总金额:' + expiresToDay);
+    let lineFeed = '\n';
+    //总览推送
+    let pushOverviewNotify = '【' + nickName + '】总额:' + subHB + '   今:' + expiresToDay + '   明:' + expiresTomorrow + '   后:' + expiresDAT + lineFeed;
+    //详细推送
+    let pushDetailNotify =
+        '【' + nickName + '】过期红包详情' + lineFeed +
+        '红包总额:' + subHB + lineFeed +
+        '⇩⇩⇩⇩⇩⇩各平台金额⇩⇩⇩⇩⇩⇩' + lineFeed +
+        '京喜红包总额:' + jx + lineFeed +
+        '京东红包总额:' + jd + lineFeed +
+        '京东优惠小程序红包总额:' + jdyh + lineFeed +
+        '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+        '今天过期总金额:' + expiresToDay + lineFeed;;
     if (expiresToDay != 0) {
-        console.log('▼▼▼▼▼▼账号：' + nickName + ' - ' + '各平台今天过期详情▼▼▼▼▼▼');
-        console.log('今天过期京喜红包总额:' + expiresToDayJX);
-        console.log('今天过期京东红包总额:' + expiresToDayJD);
-        console.log('今天过期京东优惠小程序红包总额:' + expiresToDayJDYH);
+        pushDetailNotify +=
+            '⇩⇩⇩⇩⇩⇩各平台今天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+            '今天过期京喜红包总额:' + expiresToDayJX + lineFeed +
+            '今天过期京东红包总额:' + expiresToDayJD + lineFeed +
+            '今天过期京东优惠小程序红包总额:' + expiresToDayJDYH + lineFeed;
     }
-    console.log('===================');
-    console.log('明天过期总金额:' + expiresTomorrow);
+    pushDetailNotify += '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+        '明天过期总金额:' + expiresTomorrow + lineFeed;
     if (expiresTomorrow != 0) {
-        console.log('▼▼▼▼▼▼账号：' + nickName + ' - ' + '各平台明天过期详情▼▼▼▼▼▼');
-        console.log('明天过期京喜红包总额:' + expiresTomorrowJX);
-        console.log('明天过期京东红包总额:' + expiresTomorrowJD);
-        console.log('明天过期京东优惠小程序红包总额:' + expiresTomorrowJDYH);
+        pushDetailNotify +=
+            '⇩⇩⇩⇩⇩⇩各平台明天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+            '明天过期京喜红包总额:' + expiresTomorrowJX + lineFeed +
+            '明天过期京东红包总额:' + expiresTomorrowJD + lineFeed +
+            '明天过期京东优惠小程序红包总额:' + expiresTomorrowJDYH + lineFeed;
     }
-    console.log('===================');
-    console.log('后天过期总金额:' + expiresDAT);
+    pushDetailNotify += '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+        '后天过期总金额:' + expiresDAT + lineFeed;
     if (expiresDAT != 0) {
-        console.log('▼▼▼▼▼▼账号：' + nickName + ' - ' + '各平台后天过期详情▼▼▼▼▼▼');
-        console.log('后天过期京喜红包总额:' + expiresDATJX);
-        console.log('后天过期京东红包总额:' + expiresDATJD);
-        console.log('后天过期京东优惠小程序红包总额:' + expiresDATJDYH);
+        pushDetailNotify +=
+            '⇩⇩⇩⇩⇩⇩各平台后天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+            '后天过期京喜红包总额:' + expiresDATJX + lineFeed +
+            '后天过期京东红包总额:' + expiresDATJD + lineFeed +
+            '后天过期京东优惠小程序红包总额:' + expiresDATJDYH;
     }
-
-    //推送
-    redexpires += nickName + ' - ' + '红包总额:' + subHB + '    今天过期:' + expiresToDay + '\n';
-    pushNotify +=
-        '***************分割线****************' + '\n' +
-        '账号：' + nickName + ' 红包总额:' + subHB + '\n' +
-        '▼▼▼▼▼▼账号：' + nickName + -' +各平台金额▼▼▼▼▼▼' + '\n' +
-        '京喜红包总额:' + jx + '\n' +
-        '京东红包总额:' + jd + '\n' +
-        '京东优惠小程序红包总额:' + jdyh + '\n\n';
-
-    pushNotify += '=========账号：' + nickName + ' ==========' + '\n' +
-        '今天过期总金额:' + expiresToDay + '\n';
-    if (expiresToDay != 0) {
-        pushNotify +=
-            '▼▼▼▼▼▼各平台今天过期详情▼▼▼▼▼▼' + '\n' +
-            '今天过期京喜红包总额:' + expiresToDayJX + '\n' +
-            '今天过期京东红包总额:' + expiresToDayJD + '\n' +
-            '今天过期京东优惠小程序红包总额:' + expiresToDayJDYH + '\n\n';
-
-    } else {
-        pushNotify += '==================' + '\n\n';
+    pushDetailNotify += lineFeed + (process.env.SCKEY ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
+    return {
+        pushOverviewNotify,
+        pushDetailNotify
     }
-    pushNotify += '========账号：' + nickName + ' ===========' + '\n' +
-        '明天过期总金额:' + expiresTomorrow + '\n';
-    if (expiresTomorrow != 0) {
-        pushNotify +=
-            '▼▼▼▼▼▼各平台明天过期详情▼▼▼▼▼▼' + '\n' +
-            '明天过期京喜红包总额:' + expiresTomorrowJX + '\n' +
-            '明天过期京东红包总额:' + expiresTomorrowJD + '\n' +
-            '明天过期京东优惠小程序红包总额:' + expiresTomorrowJDYH + '\n\n';
-    } else {
-        pushNotify += '==================' + '\n\n';
-    }
-    pushNotify += '========账号：' + nickName + ' ===========' + '\n' +
-        '后天过期总金额:' + expiresDAT + '\n';
-    if (expiresDAT != 0) {
-        pushNotify +=
-            '▼▼▼▼▼▼各平台后天过期详情▼▼▼▼▼▼' + '\n' +
-            '后天过期京喜红包总额:' + expiresDATJX + '\n' +
-            '后天过期京东红包总额:' + expiresDATJD + '\n' +
-            '后天过期京东优惠小程序红包总额:' + expiresDATJDYH + '\n\n';
-    } else {
-        pushNotify += '==================' + '\n\n';
-    }
-
-
 }
 
 function calHB(orgLimitStr, hb, jx, jd, jdyh) {
