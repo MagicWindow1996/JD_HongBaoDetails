@@ -29,11 +29,13 @@ var jdZz = '';
 //疯狂的JOY
 var jdJoy = '';
 //京东领现金
-var jdCash = '';
+//var jdCash = '';
 
 let codeList;
 
-let nameList = ['种豆得豆', '京东农场', '京东萌宠', '京喜工厂', '京东工厂', '京东赚赚', '疯狂的JOY', '京东领现金'];
+let nameList = ['种豆得豆', '京东农场', '京东萌宠', '京喜工厂', '京东工厂', '京东赚赚', '疯狂的JOY'
+//, '京东领现金'
+ ];
 
 let jdBeanUrl = 'http://jd.turinglabs.net/api/v2/jd/bean/create/';
 let jdFruitUrl = 'http://jd.turinglabs.net/api/v2/jd/farm/create/';
@@ -42,9 +44,11 @@ let jxFactoryUrl = 'http://jd.turinglabs.net/api/v2/jd/jxfactory/create/';
 let jdFactoryUrl = 'http://jd.turinglabs.net/api/v2/jd/ddfactory/create/';
 let jdZzUrl = 'https://code.chiang.fun/api/v1/jd/jdzz/create/';
 let jdJoyUrl = 'https://code.chiang.fun/api/v1/jd/jdcrazyjoy/create/';
-let jdCashUrl = 'https://code.chiang.fun/api/v1/jd/jdcash/create/';
+//let jdCashUrl = 'https://code.chiang.fun/api/v1/jd/jdcash/create/';
 
-let urlList = [jdBeanUrl, jdFruitUrl, jdPetUrl, jxFactoryUrl, jdFactoryUrl, jdZzUrl, jdJoyUrl, jdCashUrl];
+let urlList = [jdBeanUrl, jdFruitUrl, jdPetUrl, jxFactoryUrl, jdFactoryUrl, jdZzUrl, jdJoyUrl
+//, jdCashUrl
+];
 
 let pushNotify = {
     msg: ''
@@ -218,21 +222,6 @@ if ($.isNode()) {
     jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('@')).split('@');
     jdCash = jdCash.substring(0, jdCash.lastIndexOf('@')).split('@');
     codeList = [jdBean, jdFruit, jdPet, jxFactory, jdFactory, jdZz, jdJoy, jdCash]
-    // console.log('jdFactory=' + jdFactory);
-    // console.log('-----------------');
-    // console.log('jdBean=' + jdBean);
-    // console.log('-----------------');
-    // console.log('jdFruit=' + jdFruit);
-    // console.log('-----------------');
-    // console.log('jdPet=' + jdPet);
-    // console.log('-----------------');
-    // console.log('jxFactory=' + jxFactory);
-    // console.log('-----------------');
-    // console.log('jdZz=' + jdZz);
-    // console.log('-----------------');
-    // console.log('jdJoy=' + jdJoy);
-    // console.log('-----------------');
-    // console.log('jdCash=' + jdCash);
     let url;
     for (let i = 0; i < urlList.length; i++) {
         if (codeList[i] != '') {

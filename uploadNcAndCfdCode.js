@@ -1,23 +1,33 @@
 const $ = new Env("京喜农场和财富岛互助码提交");
-const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
+$.tokens = [$.getdata('jxnc_token1') || '{}', $.getdata('jxnc_token2') || '{}'];
 $.cookieArr = [];
-
+let nickName;
+let code1 = ['7C3C00120E3B3E5ED294454732EF7CF69C8209DD57553FEB29D24F901110FCA0', '9CAC003E1218FBEFADE82C2A98805F386832F2C8A7716272060BF611D316314C', '02A71D28DDEBCB4DEB9F5EAD92E3F21BE0BB63D49E0DACADAA04B6F3EE9FF6E9'];
+let code2 = ['Jxcfd_GroupId_163_28714943', 'Jxcfd_GroupId_163_28723045', 'Jxcfd_GroupId_163_1099540704377'];
 !(async () => {
     if (!getCookies()) return;
     for (let i = 0; i < $.cookieArr.length; i++) {
         $.currentCookie = $.cookieArr[i];
+        $.currentToken = JSON.parse($.tokens[i] || '{}');
         if ($.currentCookie) {
-            $.userName = decodeURIComponent($.currentCookie.match(/pt_pin=(.+?);/) && $.currentCookie.match(/pt_pin=(.+?);/)[1]);
             await TotalBean();
             await getJxnc();
-            await submitNc($.userName);
+            await submitNc(nickName);
             await getJxCfd();
-            await submitCfd1($.userName);
-            await submitCfd2($.userName);
+            await submitCfd1(nickName);
+            await submitCfd2(nickName);
+
+            for (let j = 0; j < code1.length; j++) {
+                if (i != j) {
+                    await assist1(code1[j], nickName);
+                    await assist2(code2[j], nickName);
+                }
+            }
+
         }
     }
-})().catch((e) => $.logErr(e)).finally(() => $.done());
+})().catch((e) => $.logErr(e)).finally();
 
 function TotalBean() {
     return new Promise(async resolve => {
@@ -46,7 +56,7 @@ function TotalBean() {
                             $.isLogin = false; //cookie过期
                             return
                         }
-                        $.nickName = data['base'].nickname;
+                        nickName = data['base'].nickname;
                     } else {
                         console.log(`京东服务器返回空数据`)
                     }
@@ -131,9 +141,9 @@ function submitNc(userName) {
                             //data = {}
                         } = JSON.parse(_data);
                         if (code == 200) {
-                            console.log($.nickName + '----京喜农场：提交成功');
+                            console.log(userName + '----京喜农场：提交成功');
                         } else {
-                            console.log($.nickName + '----' + _data.errors.message);
+                            console.log(userName + '----' + _data.errors.message);
                         }
                     } catch (e) {
                         $.log($.nickName + '----京喜农场：' + '邀请码提交失败 API 返回异常');
@@ -208,10 +218,10 @@ function submitCfd1(userName) {
             async (err, resp, _data) => {
                 try {
                     const {
-                        data = {}, code
+                        code
                     } = JSON.parse(_data);
                     if (code == 200) {
-                        console.log($.nickName + '----京喜财富岛：提交成功');
+                        console.log(userName + '----京喜财富岛：提交成功');
                     }
                 } catch (e) {
                     $.logErr(e, resp);
@@ -223,7 +233,7 @@ function submitCfd1(userName) {
     });
 }
 
-function submitCfd2() {
+function submitCfd2(userName) {
     return new Promise(resolve => {
         $.get({
             url: `https://m.jingxi.com/jxcfd/user/GatherForture?strZone=jxcfd&bizCode=jxcfd&source=jxcfd&dwEnv=7&_cfd_t=${Date.now()}&ptag=138631.26.55&_ste=1&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
@@ -263,7 +273,7 @@ function submitCfd2() {
                                     data = {}, code
                                 } = JSON.parse(_data);
                                 if (code == 200) {
-                                    console.log($.nickName + '----京喜财富岛寻宝大作战：提交成功');
+                                    console.log(userName + '----京喜财富岛寻宝大作战：提交成功');
                                 }
                             } catch (e) {
                                 $.logErr(e, resp);
@@ -280,6 +290,76 @@ function submitCfd2() {
             }
         });
     });
+}
+
+//财富岛助力自己账号
+function assist1(code, nickName) {
+    new Promise(resolve => {
+        const sceneIds = Object.keys($.info.SceneList);
+        const sceneId = Math.min(...sceneIds);
+        $.get(taskUrl('user/JoinScene', `strShareId=` + code + `&dwSceneId=${sceneId}`), async (err, resp, data) => {
+            try {
+                const {
+                    sErrMsg,
+                    data: {
+                        rewardMoney = 0
+                    } = {}
+                } = JSON.parse(data);
+
+                $.log(nickName + `【👬普通助力】助力：${sErrMsg}${$.showLog ? data : ''}` + code);
+            } catch (e) {
+                $.logErr(e, resp);
+            } finally {
+                resolve();
+            }
+        });
+    });
+}
+//助力自己寻宝大作战
+function assist2(code, nickName) {
+    return new Promise(async (resolve) => {
+        $.get({
+            url: 'https://api.ninesix.cc/api/jx-cfd-group'
+        }, (err, resp, _data) => {
+            try {
+                const {
+                    data = {}
+                } = JSON.parse(_data);
+                $.get(taskUrl(`user/JoinGroup`, `strGroupId=` + code + `&dwIsNewUser=${$.info.dwIsNewUser}&pgtimestamp=${$.currentToken['timestamp']}&phoneID=${$.currentToken['phoneid']}&pgUUNum=${$.currentToken['farm_jstoken']}`), (err, resp, data) => {
+                    try {
+                        const {
+                            sErrMsg
+                        } = JSON.parse(data);
+                        $.log(nickName + `【🏝寻宝大作战】助力：${sErrMsg}${$.showLog ? data : ''}` + code);
+                    } catch (e) {
+                        $.logErr(e, resp);
+                    } finally {
+                        resolve();
+                    }
+                });
+            } catch (e) {
+                $.logErr(e, resp);
+            } finally {
+                resolve();
+            }
+        });
+    });
+}
+
+function taskUrl(function_path, body) {
+    return {
+        url: `https://m.jingxi.com/jxcfd/${function_path}?strZone=jxcfd&bizCode=jxcfd&source=jxcfd&dwEnv=7&_cfd_t=${Date.now()}&ptag=138631.26.55&${body}&_ste=1&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
+        headers: {
+            Cookie: $.currentCookie,
+            Accept: "*/*",
+            Connection: "keep-alive",
+            Referer: "https://st.jingxi.com/fortune_island/index.html?ptag=138631.26.55",
+            "Accept-Encoding": "gzip, deflate, br",
+            Host: "m.jingxi.com",
+            "User-Agent": `jdpingou;iPhone;3.15.2;14.2.1;ea00763447803eb0f32045dcba629c248ea53bb3;network/wifi;model/iPhone13,2;appBuild/100365;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
+            "Accept-Language": "zh-cn",
+        },
+    };
 }
 
 // prettier-ignore
