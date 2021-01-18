@@ -95,6 +95,8 @@ if ($.isNode()) {
 
     console.log('/jdcrazyjoy ' + jdJoy);
 
+    console.log('/jdcash ' + jdCash);
+
     /*console.log('【京东口袋书店】' + jdBookShop);
 
     console.log('【京喜农场】' + jxNc);*/
