@@ -68,18 +68,36 @@ if ($.isNode()) {
             await getShareCode();
         }
     }
-    jdBean = jdBean.substring(0, jdBean.lastIndexOf('@'));
-    jdFruit = jdFruit.substring(0, jdFruit.lastIndexOf('@'));
-    jdPet = jdPet.substring(0, jdPet.lastIndexOf('@'));
-    jxFactory = jxFactory.substring(0, jxFactory.lastIndexOf('@'));
-    jdFactory = jdFactory.substring(0, jdFactory.lastIndexOf('@'));
+    jdBean = jdBean.substring(0, jdBean.lastIndexOf('&'));
+    jdFruit = jdFruit.substring(0, jdFruit.lastIndexOf('&'));
+    jdPet = jdPet.substring(0, jdPet.lastIndexOf('&'));
+    jxFactory = jxFactory.substring(0, jxFactory.lastIndexOf('&'));
+    jdFactory = jdFactory.substring(0, jdFactory.lastIndexOf('&'));
     if (jdZz != '') {
-        jdZz = jdZz.substring(0, jdZz.lastIndexOf('@'));
+        jdZz = jdZz.substring(0, jdZz.lastIndexOf('&'));
     }
-    jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('@'));
-    jdCash = jdCash.substring(0, jdCash.lastIndexOf('@'));
-    jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('@'));
-    jxNc = jxNc.substring(0, jxNc.lastIndexOf('@'));
+    jdJoy = jdJoy.substring(0, jdJoy.lastIndexOf('&'));
+    jdCash = jdCash.substring(0, jdCash.lastIndexOf('&'));
+    jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('&'));
+    jxNc = jxNc.substring(0, jxNc.lastIndexOf('&'));
+
+    console.log('/submit_ddfactory_code ' + jdFactory);
+
+    console.log('/submit_bean_code ' + jdBean);
+
+    console.log('/submit_farm_code ' + jdFruit);
+
+    console.log('/submit_pet_code ' + jdPet);
+
+    console.log('/submit_jxfactory_code ' + jxFactory);
+
+    /*console.log('【京东赚赚】' + jdZz);
+
+    console.log('【疯狂的JOY】' + jdJoy);
+
+    console.log('【京东口袋书店】' + jdBookShop);
+
+    console.log('【京喜农场】' + jxNc);*/
 
     // console.log('【京东工厂】' + jdFactory);
 
@@ -95,12 +113,10 @@ if ($.isNode()) {
 
     // console.log('【疯狂的JOY】' + jdJoy);
 
-    // console.log('【京东领现金】' + jdCash);
-
     // console.log('【京东口袋书店】' + jdBookShop);
 
     // console.log('【京喜农场】' + jxNc);
-    var t1 = '&' + jdFruit;
+    /*var t1 = '&' + jdFruit;
     var t2 = '&' + jdPet;
     var t3 = '&' + jdBean;
     var t4 = '&' + jdFactory;
@@ -130,7 +146,7 @@ if ($.isNode()) {
     }
     console.log('env.JDJOY_SHARECODES =' + '\'' + jdJoy + '\'' + ';' + '\n');
     console.log('env.BOOKSHOP_SHARECODES =' + '\'' + jdBookShop + '\'' + ';' + '\n');
-    console.log('env.JXNC_SHARECODES =' + '\'' + jxNc + '\'' + ';' + '\n');
+    console.log('env.JXNC_SHARECODES =' + '\'' + jxNc + '\'' + ';' + '\n');*/
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -155,7 +171,7 @@ function getJdFactory() {
                                 $.taskVos = data.data.result.taskVos; //任务列表
                                 $.taskVos.map((item) => {
                                     if (item.taskType === 14) {
-                                        jdFactory += item.assistTaskDetailVo.taskToken + '@';
+                                        jdFactory += item.assistTaskDetailVo.taskToken + '&';
                                     }
                                 });
                             }
@@ -217,7 +233,7 @@ function getJxFactory() {
                                     $.productionId = production.productionId; //商品ID
                                     $.commodityDimId = production.commodityDimId;
                                     $.encryptPin = data.user.encryptPin;
-                                    jxFactory += data.user.encryptPin + '@';
+                                    jxFactory += data.user.encryptPin + '&';
                                 }
                             } else {
                                 $.unActive = false; //标记是否开启了京喜活动或者选购了商品进行生产
@@ -336,7 +352,7 @@ function getJdPet() {
                             return;
                         }
 
-                        jdPet += `${$.petInfo.shareCode}` + '@';
+                        jdPet += `${$.petInfo.shareCode}` + '&';
                     } else if (initPetTownRes.code === "0") {
                         console.log(`初始化萌宠失败:  ${initPetTownRes.message}`);
                     } else {
@@ -379,7 +395,7 @@ function getJdCash() {
                         data = JSON.parse(data);
                         if (data.code === 0 && data.data.result) {
                             //console.log(`【账号${$.index}（${$.nickName || $.UserName}）领现金】${data.data.result.inviteCode}`);
-                            jdCash += data.data.result.inviteCode + '@';
+                            jdCash += data.data.result.inviteCode + '&';
                         }
                     }
                 }
@@ -407,7 +423,7 @@ async function getJdZZ() {
                             data = JSON.parse(data);
                             if (data.data.shareTaskRes) {
                                 //console.log(`【账号${$.index}（${$.nickName || $.UserName}）京东赚赚】${data.data.shareTaskRes.itemId}`);
-                                jdZz += data.data.shareTaskRes.itemId + '@';
+                                jdZz += data.data.shareTaskRes.itemId + '&';
                             } else {
                                 //console.log(`已满5人助力,暂时看不到您的京东赚赚好友助力码`)
                             }
@@ -506,7 +522,7 @@ async function getPlantBean() {
         if ($.plantBeanIndexResult.code === "0") {
             const shareUrl = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl;
             $.myPlantUuid = getParam(shareUrl, "plantUuid");
-            jdBean += $.myPlantUuid + '@';
+            jdBean += $.myPlantUuid + '&';
         } else {
             console.log(
                 `种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`
@@ -567,7 +583,7 @@ async function getJDFruit() {
     async function jdFruit1() {
         await initForFarm();
         if ($.farmInfo.farmUserPro) {
-            jdFruit += `${$.farmInfo.farmUserPro.shareCode}` + '@';
+            jdFruit += `${$.farmInfo.farmUserPro.shareCode}` + '&';
         } else {
 
         }
@@ -609,7 +625,7 @@ async function getJoy() {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
                         if (data.success && data.data && data.data.userInviteCode) {
-                            jdJoy += data.data.userInviteCode + '@';
+                            jdJoy += data.data.userInviteCode + '&';
                         }
                     }
                 }
@@ -829,7 +845,7 @@ function getActContent() {
                     if (safeGet(data)) {
                         data = JSON.parse(data);
                         if (data.data) {
-                            jdBookShop += data.data.actorUuid + '@';
+                            jdBookShop += data.data.actorUuid + '&';
                         }
                     }
                 }
@@ -866,7 +882,7 @@ function getJxnc() {
                     retmsg,
                     ...other
                 } = JSON.parse(res);
-                jxNc += other.smp + '@';
+                jxNc += other.smp + '&';
             } catch (e) {
                 $.logErr(e, resp);
             } finally {
