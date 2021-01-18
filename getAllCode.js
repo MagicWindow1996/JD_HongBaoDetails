@@ -91,13 +91,16 @@ if ($.isNode()) {
 
     console.log('/submit_jxfactory_code ' + jxFactory);
 
-    /*console.log('【京东赚赚】' + jdZz);
+    console.log('/jdzz ' + jdZz);
 
-    console.log('【疯狂的JOY】' + jdJoy);
+    console.log('/jdcrazyjoy ' + jdJoy);
 
-    console.log('【京东口袋书店】' + jdBookShop);
+    /*console.log('【京东口袋书店】' + jdBookShop);
 
     console.log('【京喜农场】' + jxNc);*/
+
+
+
 
     // console.log('【京东工厂】' + jdFactory);
 
