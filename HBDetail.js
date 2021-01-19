@@ -13,8 +13,11 @@ let cookiesArr = [],
     message;
 let pon = '',
     pdn = '';
-//通知等级，默认为0：包含今明后过期详情，完整通知
-//1：不包含详情，只有总览
+/*
+红包详情通知等级
+0： 包含今明后过期详情， 完整通知
+1： 不包含详情， 只有总览（ 默认）
+*/
 process.env.HBDETAIL_NOTIFY_LEVEL = (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
