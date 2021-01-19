@@ -3,7 +3,7 @@
  * @Author: Aerozb（Low） https://github.com/Aerozb/JD_HongBaoDetails
  */
 
-const $ = new Env('京东京喜红包详情1');
+const $ = new Env('京东京喜红包详情');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
