@@ -18,7 +18,9 @@ let pon = '',
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
+console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
 process.env.HBDETAIL_NOTIFY_LEVEL = (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
+console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
