@@ -18,11 +18,7 @@ let pon = '',
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
-console.log(process.env);
-console.log(process.env.JD_COOKIE);
-console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
-let notifyLevel = (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
-console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
+let  notifyLevel= (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -71,9 +67,9 @@ if ($.isNode()) {
     }
 
     console.clear();
-    console.log(pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    console.log(pon + (((process.env.PUSH_KEY!='')!='') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
     if (notifyLevel == 0) {
-        notify.sendNotify($.name, pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+        notify.sendNotify($.name, pon + ((process.env.PUSH_KEY!='') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
     } else {
         notify.sendNotify($.name, pon);
     }
@@ -84,7 +80,6 @@ if ($.isNode()) {
     .finally(() => {
         $.done();
     })
-
 
 function TotalBean() {
     return new Promise(resolve => {
@@ -283,7 +278,7 @@ function cal(data, nickName) {
             '京东:' + expiresDATJD + lineFeed +
             '京东优惠小程序:' + expiresDATJDYH;
     }
-    pushDetailNotify += lineFeed + (process.env.PUSH_KEY ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
+    pushDetailNotify += lineFeed + ((process.env.PUSH_KEY!='') ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     return {
         pushOverviewNotify,
         pushDetailNotify
