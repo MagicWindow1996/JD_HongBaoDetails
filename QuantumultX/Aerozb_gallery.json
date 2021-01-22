@@ -1,0 +1,7 @@
+{
+  "name": "Aerozb task gallery",
+  "description": "https://github.com/Aerozb/JD_HongBaoDetails",
+  "task": [
+    "0 10,8 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/main/HBDetail.js, tag=红包总额及过期详情, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true"
+  ]
+}
