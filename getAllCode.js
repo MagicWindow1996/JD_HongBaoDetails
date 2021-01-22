@@ -1,7 +1,7 @@
 /*
 自动获取所有互助码并拼接
 作者；Aerozb（Low）
-https: //github.com/Aerozb/JD_HongBaoDetails/blob/main/getAllCode.js
+https://github.com/Aerozb/JD_HongBaoDetails/blob/main/getAllCode.js
  */
 const $ = new Env("互助码获取");
 const JD_API_HOST = "https://api.m.jd.com/client.action";
