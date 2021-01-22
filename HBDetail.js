@@ -4,18 +4,17 @@
   ============QuantumultX==============
 [task_local]
 #京东京喜红包详情
-5 0 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/jd_club_lottery.js, tag=京东京喜红包详情, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
+5 0 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js, tag=京东京喜红包详情, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
 =================Loon===============
 [Script]
-cron "5 0 * * *" script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/jd_club_lottery.js,tag=京东京喜红包详情
+cron "5 0 * * *" script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js,tag=京东京喜红包详情
 =================Surge==============
 [Script]
-京东京喜红包详情 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/jd_club_lottery.js
+京东京喜红包详情 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js
 
 ============小火箭=========
-京东京喜红包详情 = type=cron,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/jd_club_lottery.js, cronexpr="5 0 * * *", timeout=3600, enable=true
+京东京喜红包详情 = type=cron,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js, cronexpr="5 0 * * *", timeout=3600, enable=true
 */
-
 
 const $ = new Env('京东京喜红包详情');
 const notify = $.isNode() ? require('./sendNotify') : '';
