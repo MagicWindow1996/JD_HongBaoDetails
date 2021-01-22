@@ -18,8 +18,10 @@ let pon = '',
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
+console.log(process.env);
+console.log(process.env.JD_COOKIE);
 console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
-process.env.HBDETAIL_NOTIFY_LEVEL = (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
+let notifyLevel = (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
 console.log(process.env.HBDETAIL_NOTIFY_LEVEL);
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -70,7 +72,7 @@ if ($.isNode()) {
 
     console.clear();
     console.log(pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
-    if (process.env.HBDETAIL_NOTIFY_LEVEL == 0) {
+    if (notifyLevel == 0) {
         notify.sendNotify($.name, pon + (process.env.PUSH_KEY ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
     } else {
         notify.sendNotify($.name, pon);
