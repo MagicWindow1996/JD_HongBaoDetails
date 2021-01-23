@@ -31,12 +31,12 @@ let pon = '',
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
-let  notifyLevel= (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1);
+let notifyLevel = $.isNode() ? (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1) : 1;
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
     })
-    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
 } else {
     let cookiesData = $.getdata('CookiesJD') || "[]";
     cookiesData = jsonParse(cookiesData);
@@ -78,14 +78,15 @@ if ($.isNode()) {
             pdn += push.pushDetailNotify;
         }
     }
-
-    console.clear();
-    console.log(pon + (((process.env.PUSH_KEY!='')!='') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
-    if (notifyLevel == 0) {
-        notify.sendNotify($.name, pon + ((process.env.PUSH_KEY!='') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
-    } else {
-        notify.sendNotify($.name, pon);
+    console.log(pon + ((($.isNode() && process.env.PUSH_KEY != '') != '') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    if ($.isNode()) {
+        if (notifyLevel == 0) {
+            notify.sendNotify($.name, pon + (($.isNode() && process.env.PUSH_KEY != '') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+        } else {
+            notify.sendNotify($.name, pon);
+        }
     }
+    $.msg($.name, pon)
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -150,7 +151,7 @@ function jsonParse(str) {
 function getHB(nickName) {
     return new Promise(async resolve => {
         const options = {
-            "url": 'https://api.m.jd.com/api?appid=myhongbao_pc&functionId=myhongbao_list_usable&body={"appId":"pcHongBao","appToken":"f7e5532105b80989","platform":"0","platformId":"pcHongBao","platformToken":"f7e5532105b80989","organization":"JD","pageNum":1}&jsonp=jsonp_' + new Date().getTime() + '_95971',
+            "url": encodeURI('https://api.m.jd.com/api?appid=myhongbao_pc&functionId=myhongbao_list_usable&body={"appId":"pcHongBao","appToken":"f7e5532105b80989","platform":"0","platformId":"pcHongBao","platformToken":"f7e5532105b80989","organization":"JD","pageNum":1}&jsonp=jsonp_' + new Date().getTime() + '_95971'),
             "headers": {
                 "Accept": "application/json,text/plain, */*",
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -291,7 +292,7 @@ function cal(data, nickName) {
             '京东:' + expiresDATJD + lineFeed +
             '京东优惠小程序:' + expiresDATJDYH;
     }
-    pushDetailNotify += lineFeed + ((process.env.PUSH_KEY!='') ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
+    pushDetailNotify += lineFeed + (($.isNode() && process.env.PUSH_KEY != '') ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     return {
         pushOverviewNotify,
         pushDetailNotify
@@ -390,7 +391,7 @@ function Env(t, e) {
             const i = this.getdata(t);
             if (i) try {
                 s = JSON.parse(this.getdata(t))
-            } catch {}
+            } catch { }
             return s
         }
         setjson(t, e) {
@@ -502,7 +503,7 @@ function Env(t, e) {
         initGotEnv(t) {
             this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar))
         }
-        get(t, e = (() => {})) {
+        get(t, e = (() => { })) {
             t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
                 "X-Surge-Skip-Scripting": !1
             })), $httpClient.get(t, (t, s, i) => {
@@ -552,7 +553,7 @@ function Env(t, e) {
                 e(s, i, i && i.body)
             }))
         }
-        post(t, e = (() => {})) {
+        post(t, e = (() => { })) {
             if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
                 "X-Surge-Skip-Scripting": !1
             })), $httpClient.post(t, (t, s, i) => {
