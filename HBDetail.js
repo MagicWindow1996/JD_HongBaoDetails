@@ -17,7 +17,8 @@ let cookiesArr = [],
 let pon = '',
     pdn = '';
 /*
-红包详情通知等级
+HBDETAIL_NOTIFY_LEVEL
+红包详情通知等级变量
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
