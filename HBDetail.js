@@ -69,6 +69,7 @@ if ($.isNode()) {
             pdn += push.pushDetailNotify;
         }
     }
+
     let isServerKey = $.isNode() ? process.env.PUSH_KEY != '' : false;
     console.log(pon + '\n\n' + pdn);
     if ($.isNode()) {
@@ -267,6 +268,7 @@ function cal(data, nickName) {
             ['明天过期总金额', '京东', '京喜', '各平台明天过期详情'],
             ['后天过期总金额', '京东', '京喜', '各平台后天过期详情']
         ];
+        pushOverviewNotify +='<style>table,th,tr,td{border:1px solid #0094ff}table{width:200px;min-height:25px;line-height:25px;text-align:center;border-collapse:collapse;padding:2px}</style>';
         let first = true;
         //总览推送
         for (let i = 0; i < overviewNameList.length; i++) {
