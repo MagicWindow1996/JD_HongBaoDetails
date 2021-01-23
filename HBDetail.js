@@ -253,7 +253,7 @@ function cal(data, nickName) {
     subHB = add(add(jd, jx), jdyh);
     let pushOverviewNotify = '';
     let pushDetailNotify = '';
-    //push表格推送
+    //push+支持html所以用表格推送，其他则用文字
     if ($.isNode() && process.env.PUSH_PLUS_TOKEN != '') {
         let hbList = [
             [subHB, jx, jd],
