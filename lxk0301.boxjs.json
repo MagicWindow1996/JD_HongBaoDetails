@@ -1,0 +1,31 @@
+{
+  "id": "Aerozb.app.sub",
+  "name": "Aerozb脚本订阅",
+  "author": "@Aerozb",
+  "icon": "https://avatars0.githubusercontent.com/u/21308593?s=52&v=4",
+  "repo": "https://github.com/Aerozb/JD_HongBaoDetails",
+  "apps": [{
+    "id": "HBDetail",
+    "name": "京东京喜红包详情",
+    "keys": [
+      "HBDETAIL_NOTIFY_LEVEL"
+    ],
+    "descs_html": [
+      "<h4 align=\"center\">获取总览或者包含详情，请填写变量，去查看<a href=\"https://github.com/Aerozb/JD_HongBaoDetails/blob/main/HBDetail.js\">脚本注释</a></h4>"
+    ],
+    "settings": [{
+      "id": "HBDETAIL_NOTIFY_LEVEL",
+      "name": "总览",
+      "val": 1,
+      "type": "number",
+      "desc": "不包含详情， 只有总览"
+    }],
+    "author": "@Aerozb",
+    "repo": "https://github.com/Aerozb/jd_scripts",
+    "script": "https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/main/HBDetail.js",
+    "icons": [
+      "https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png",
+      "https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png"
+    ]
+  }]
+}

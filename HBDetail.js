@@ -4,18 +4,8 @@
   ============QuantumultX==============
 [task_local]
 #京东京喜红包详情
-5 0 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js, tag=京东京喜红包详情, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
-=================Loon===============
-[Script]
-cron "5 0 * * *" script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js,tag=京东京喜红包详情
-=================Surge==============
-[Script]
-京东京喜红包详情 = type=cron,cronexp="5 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js
-
-============小火箭=========
-京东京喜红包详情 = type=cron,script-path=https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js, cronexpr="5 0 * * *", timeout=3600, enable=true
+0 9,20 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/master/HBDetail.js, tag=京东京喜红包详情, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyjd.png, enabled=true
 */
-
 const $ = new Env('京东京喜红包详情');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -31,12 +21,13 @@ let pon = '',
 0： 包含今明后过期详情， 完整通知
 1： 不包含详情， 只有总览（ 默认）
 */
-let notifyLevel = $.isNode() ? (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1) : 1;
+let notifyLevel = 1;
+notifyLevel = $.isNode() ? (process.env.HBDETAIL_NOTIFY_LEVEL ? process.env.HBDETAIL_NOTIFY_LEVEL : 1) : ($.getdata('HBDETAIL_NOTIFY_LEVEL') ? $.getdata('HBDETAIL_NOTIFY_LEVEL') : 1);
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
     })
-    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
+    if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
     let cookiesData = $.getdata('CookiesJD') || "[]";
     cookiesData = jsonParse(cookiesData);
@@ -78,15 +69,20 @@ if ($.isNode()) {
             pdn += push.pushDetailNotify;
         }
     }
-    console.log(pon + ((($.isNode() && process.env.PUSH_KEY != '') != '') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+    let isServerKey = $.isNode() ? process.env.PUSH_KEY != '' : false;
+    console.log(pon + '\n\n' + pdn);
     if ($.isNode()) {
         if (notifyLevel == 0) {
-            notify.sendNotify($.name, pon + (($.isNode() && process.env.PUSH_KEY != '') ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n') + pdn);
+            notify.sendNotify($.name, pon + (isServerKey ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n\n') + pdn);
         } else {
             notify.sendNotify($.name, pon);
         }
     }
-    $.msg($.name, pon)
+    if (notifyLevel == 1) {
+        $.msg($.name, pon);
+    } else {
+        $.msg($.name, pon + '\n\n' + pdn);
+    }
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -264,35 +260,38 @@ function cal(data, nickName) {
         '⇩⇩⇩⇩⇩⇩各平台金额⇩⇩⇩⇩⇩⇩' + lineFeed +
         '京喜红包总额:' + jx + lineFeed +
         '京东红包总额:' + jd + lineFeed +
-        '京东优惠小程序红包总额:' + jdyh + lineFeed +
-        '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+        //'京东优惠小程序红包总额:' + jdyh + lineFeed +
+        '================' + lineFeed +
         '今天过期总金额：' + expiresToDay + lineFeed;;
     if (expiresToDay != 0) {
         pushDetailNotify +=
             '⇩⇩⇩⇩⇩⇩各平台今天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
             '京喜:' + expiresToDayJX + lineFeed +
-            '京东:' + expiresToDayJD + lineFeed +
-            '京东优惠小程序:' + expiresToDayJDYH + lineFeed;
+            '京东:' + expiresToDayJD + lineFeed
+        //+'京东优惠小程序:' + expiresToDayJDYH + lineFeed
+        ;
     }
-    pushDetailNotify += '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+    pushDetailNotify += '================' + lineFeed +
         '明天过期总金额：' + expiresTomorrow + lineFeed;
     if (expiresTomorrow != 0) {
         pushDetailNotify +=
             '⇩⇩⇩⇩⇩⇩各平台明天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
             '京喜:' + expiresTomorrowJX + lineFeed +
-            '京东:' + expiresTomorrowJD + lineFeed +
-            '京东优惠小程序:' + expiresTomorrowJDYH + lineFeed;
+            '京东:' + expiresTomorrowJD + lineFeed
+        //+'京东优惠小程序:' + expiresTomorrowJDYH + lineFeed
+        ;
     }
-    pushDetailNotify += '━━━━━━━━━━━━━━━━━━━━' + lineFeed +
+    pushDetailNotify += '================' + lineFeed +
         '后天过期总金额：' + expiresDAT + lineFeed;
     if (expiresDAT != 0) {
         pushDetailNotify +=
             '⇩⇩⇩⇩⇩⇩各平台后天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
             '京喜:' + expiresDATJX + lineFeed +
-            '京东:' + expiresDATJD + lineFeed +
-            '京东优惠小程序:' + expiresDATJDYH;
+            '京东:' + expiresDATJD + lineFeed
+        //+'京东优惠小程序:' + expiresDATJDYH
+        ;
     }
-    pushDetailNotify += lineFeed + (($.isNode() && process.env.PUSH_KEY != '') ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
+    pushDetailNotify += lineFeed + (($.isNode() ? process.env.PUSH_KEY != '' : false) ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     return {
         pushOverviewNotify,
         pushDetailNotify
@@ -391,7 +390,7 @@ function Env(t, e) {
             const i = this.getdata(t);
             if (i) try {
                 s = JSON.parse(this.getdata(t))
-            } catch { }
+            } catch {}
             return s
         }
         setjson(t, e) {
@@ -503,7 +502,7 @@ function Env(t, e) {
         initGotEnv(t) {
             this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar))
         }
-        get(t, e = (() => { })) {
+        get(t, e = (() => {})) {
             t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
                 "X-Surge-Skip-Scripting": !1
             })), $httpClient.get(t, (t, s, i) => {
@@ -553,7 +552,7 @@ function Env(t, e) {
                 e(s, i, i && i.body)
             }))
         }
-        post(t, e = (() => { })) {
+        post(t, e = (() => {})) {
             if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
                 "X-Surge-Skip-Scripting": !1
             })), $httpClient.post(t, (t, s, i) => {
