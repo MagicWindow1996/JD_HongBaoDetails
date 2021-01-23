@@ -70,7 +70,7 @@ if ($.isNode()) {
         }
     }
     let isServerKey = $.isNode() ? process.env.PUSH_KEY != '' : false;
-    console.log(pon + '\n\n' + pdn);
+    //console.log(pon + '\n\n' + pdn);
     if ($.isNode()) {
         if (notifyLevel == 0) {
             notify.sendNotify($.name, pon + (isServerKey ? '▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶\n' : '\n\n') + pdn);
@@ -79,9 +79,9 @@ if ($.isNode()) {
         }
     }
     if (notifyLevel == 1) {
-        $.msg($.name, pon);
+        $.msg($.name, '', pon);
     } else {
-        $.msg($.name, pon + '\n\n' + pdn);
+        $.msg($.name, '', pon + '\n\n' + pdn);
     }
 })()
     .catch((e) => {
