@@ -250,48 +250,105 @@ function cal(data, nickName) {
     }
 
     subHB = add(add(jd, jx), jdyh);
-    let lineFeed = '\n';
-    //总览推送
-    let pushOverviewNotify = '【' + nickName + '】总额:' + subHB + lineFeed + '今:' + expiresToDay + '　　　明:' + expiresTomorrow + '　　　后:' + expiresDAT + lineFeed;
-    //详细推送
-    let pushDetailNotify =
-        '【' + nickName + '】过期红包详情' + lineFeed +
-        '红包总额:' + subHB + lineFeed +
-        '⇩⇩⇩⇩⇩⇩各平台金额⇩⇩⇩⇩⇩⇩' + lineFeed +
-        '京喜红包总额:' + jx + lineFeed +
-        '京东红包总额:' + jd + lineFeed +
-        //'京东优惠小程序红包总额:' + jdyh + lineFeed +
-        '================' + lineFeed +
-        '今天过期总金额：' + expiresToDay + lineFeed;;
-    if (expiresToDay != 0) {
-        pushDetailNotify +=
-            '⇩⇩⇩⇩⇩⇩各平台今天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
-            '京喜:' + expiresToDayJX + lineFeed +
-            '京东:' + expiresToDayJD + lineFeed
-        //+'京东优惠小程序:' + expiresToDayJDYH + lineFeed
-        ;
+    let pushOverviewNotify = '';
+    let pushDetailNotify = '';
+    //push表格推送
+    if ($.isNode() && process.env.PUSH_PLUS_TOKEN != '') {
+        let hbList = [
+            [subHB, jx, jd],
+            [expiresToDay, expiresToDayJD, expiresToDayJX],
+            [expiresTomorrow, expiresTomorrowJD, expiresTomorrowJX],
+            [expiresDAT, expiresDATJD, expiresDATJX]
+        ];
+        let overviewNameList = ['总额', '今过期', '明过期', '后过期'];
+        let detailNameList = [
+            ['红包总额', '京东红包总额', '京喜红包总额', '各平台金额详情'],
+            ['今天过期总金额', '京东', '京喜', '各平台今天过期详情'],
+            ['明天过期总金额', '京东', '京喜', '各平台明天过期详情'],
+            ['后天过期总金额', '京东', '京喜', '各平台后天过期详情']
+        ];
+        let first = true;
+        //总览推送
+        for (let i = 0; i < overviewNameList.length; i++) {
+            if (first) {
+                pushOverviewNotify += '<table><tr><th colspan="2" style="color: red;">' +
+                    nickName + '</th></tr>';
+                first = false;
+            }
+            pushOverviewNotify += '<tr><td>' + overviewNameList[i] + '</td><td>' +
+                hbList[i][0] + '</td></tr>';
+        }
+        pushOverviewNotify += '</table><br>';
+        //详细推送
+        first = true;
+        let endName = detailNameList[0].length - 1;
+        for (let i = 0; i < hbList.length; i++) {
+            for (let j = 0; j < hbList[i].length; j++) {
+                if (j == 0) {
+                    if (first) {
+                        pushDetailNotify = pushDetailNotify + '<table><tr><th colspan="2" style="color: red;">' + nickName + '</th></tr><tr><th colspan="2">';
+                        first = false;
+                    } else {
+                        pushDetailNotify = pushDetailNotify + '<table><tr><th colspan="2">'
+                    }
+                    pushDetailNotify += detailNameList[i][j] +
+                        '</th></tr><tr><td colspan="2">' +
+                        hbList[i][j] + '</td></tr>';
+                }
+                if (hbList[i][0] != 0 && j == 1) {
+                    pushDetailNotify = pushDetailNotify + ' <th colspan="2">' + detailNameList[i][endName] + '</th>';
+                }
+                if (hbList[i][0] != 0 && j != 0) {
+                    pushDetailNotify = pushDetailNotify + '<tr><td>' + detailNameList[i][j] + '</td><td>' + hbList[i][j] + '</td></tr>';
+                }
+            }
+            pushDetailNotify = pushDetailNotify + '</table>';
+        }
+        pushDetailNotify += '<br>';
+    } else {
+        let lineFeed = '\n';
+        //总览推送
+        pushOverviewNotify = '【' + nickName + '】总额:' + subHB + lineFeed + '今:' + expiresToDay + '　　　明:' + expiresTomorrow + '　　　后:' + expiresDAT + lineFeed;
+        //详细推送
+        pushDetailNotify =
+            '【' + nickName + '】过期红包详情' + lineFeed +
+            '红包总额:' + subHB + lineFeed +
+            '⇩⇩⇩⇩⇩⇩各平台金额⇩⇩⇩⇩⇩⇩' + lineFeed +
+            '京喜红包总额:' + jx + lineFeed +
+            '京东红包总额:' + jd + lineFeed +
+            //'京东优惠小程序红包总额:' + jdyh + lineFeed +
+            '================' + lineFeed +
+            '今天过期总金额：' + expiresToDay + lineFeed;;
+        if (expiresToDay != 0) {
+            pushDetailNotify +=
+                '⇩⇩⇩⇩⇩⇩各平台今天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+                '京喜:' + expiresToDayJX + lineFeed +
+                '京东:' + expiresToDayJD + lineFeed
+            //+'京东优惠小程序:' + expiresToDayJDYH + lineFeed
+            ;
+        }
+        pushDetailNotify += '================' + lineFeed +
+            '明天过期总金额：' + expiresTomorrow + lineFeed;
+        if (expiresTomorrow != 0) {
+            pushDetailNotify +=
+                '⇩⇩⇩⇩⇩⇩各平台明天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+                '京喜:' + expiresTomorrowJX + lineFeed +
+                '京东:' + expiresTomorrowJD + lineFeed
+            //+'京东优惠小程序:' + expiresTomorrowJDYH + lineFeed
+            ;
+        }
+        pushDetailNotify += '================' + lineFeed +
+            '后天过期总金额：' + expiresDAT + lineFeed;
+        if (expiresDAT != 0) {
+            pushDetailNotify +=
+                '⇩⇩⇩⇩⇩⇩各平台后天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
+                '京喜:' + expiresDATJX + lineFeed +
+                '京东:' + expiresDATJD + lineFeed
+            //+'京东优惠小程序:' + expiresDATJDYH
+            ;
+        }
+        pushDetailNotify += lineFeed + (($.isNode() ? process.env.PUSH_KEY != '' : false) ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     }
-    pushDetailNotify += '================' + lineFeed +
-        '明天过期总金额：' + expiresTomorrow + lineFeed;
-    if (expiresTomorrow != 0) {
-        pushDetailNotify +=
-            '⇩⇩⇩⇩⇩⇩各平台明天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
-            '京喜:' + expiresTomorrowJX + lineFeed +
-            '京东:' + expiresTomorrowJD + lineFeed
-        //+'京东优惠小程序:' + expiresTomorrowJDYH + lineFeed
-        ;
-    }
-    pushDetailNotify += '================' + lineFeed +
-        '后天过期总金额：' + expiresDAT + lineFeed;
-    if (expiresDAT != 0) {
-        pushDetailNotify +=
-            '⇩⇩⇩⇩⇩⇩各平台后天过期详情⇩⇩⇩⇩⇩⇩' + lineFeed +
-            '京喜:' + expiresDATJX + lineFeed +
-            '京东:' + expiresDATJD + lineFeed
-        //+'京东优惠小程序:' + expiresDATJDYH
-        ;
-    }
-    pushDetailNotify += lineFeed + (($.isNode() ? process.env.PUSH_KEY != '' : false) ? ('▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶' + lineFeed) : lineFeed);
     return {
         pushOverviewNotify,
         pushDetailNotify
