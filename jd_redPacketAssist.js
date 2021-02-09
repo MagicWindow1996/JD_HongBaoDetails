@@ -8,8 +8,8 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
-  cookie = '';
-let redPacketId = [271771584, 271768805, 271774595];
+    cookie = '';
+let redPacketIds = [271771584, 271768805, 271774595];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -32,7 +32,12 @@ if ($.isNode()) {
     });
     return;
   }
-
+  // for (let i = 0; i < cookiesArr.length; i++) {
+  //   if (cookiesArr[i]) {
+  //     cookie = cookiesArr[i];
+  //     await getAssist();
+  //   }
+  // }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -53,17 +58,72 @@ if ($.isNode()) {
         continue;
       }
       for (let i = 0; i < redPacketId.length; i++) {
-        await assist(redPacketId[i]);
+        await assist(redPacketIds[i]);
       }
     }
   }
+  for (let i = 0; i < cookiesArr.length; i++) {
+    if (cookiesArr[i]) {
+      cookie = cookiesArr[i];
+      await openRedPacket(redPacketIds[i]);
+    }
+  }
 })()
-.catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    .catch((e) => {
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    })
+    .finally(() => {
+      $.done();
+    })
+
+function openRedPacket() {
+  return new Promise((resolve) => {
+    $.post(taskUrl('h5receiveRedpacket', {
+      "clientInfo": {},
+      "redPacketId": 271771584
+    }), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`\n${$.name}: API查询请求失败 ‼️‼️`);
+          console.log(JSON.stringify(err));
+        } else {
+          data = JSON.parse(data).data;
+          if (data.biz_code == 0) {
+            console.log(data.msg + ':' + data.result.discount + '元');
+          } else {
+            console.log(data.msg);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve(data);
+      }
+    })
   })
-  .finally(() => {
-    $.done();
+}
+
+function getAssist() {
+  return new Promise((resolve) => {
+    $.post(taskUrl('h5activityIndex', {
+      "clientInfo": {},
+      "isjdapp": 1
+    }), (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`\n${$.name}: API查询请求失败 ‼️‼️`);
+          console.log(JSON.stringify(err));
+        } else {
+          redPacketId.push(JSON.parse(data).data.result.redpacketInfo.id);
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve(data);
+      }
+    })
   })
+}
 
 function assist(redPacketId) {
   return new Promise((resolve) => {
@@ -264,9 +324,9 @@ function Env(t, e) {
       if (!this.isNode()) return {}; {
         this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-          e = this.path.resolve(process.cwd(), this.dataFile),
-          s = this.fs.existsSync(t),
-          i = !s && this.fs.existsSync(e);
+            e = this.path.resolve(process.cwd(), this.dataFile),
+            s = this.fs.existsSync(t),
+            i = !s && this.fs.existsSync(e);
         if (!s && !i) return {}; {
           const i = s ? t : e;
           try {
@@ -281,10 +341,10 @@ function Env(t, e) {
       if (this.isNode()) {
         this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-          e = this.path.resolve(process.cwd(), this.dataFile),
-          s = this.fs.existsSync(t),
-          i = !s && this.fs.existsSync(e),
-          r = JSON.stringify(this.data);
+            e = this.path.resolve(process.cwd(), this.dataFile),
+            s = this.fs.existsSync(t),
+            i = !s && this.fs.existsSync(e),
+            r = JSON.stringify(this.data);
         s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r)
       }
     }
@@ -460,7 +520,7 @@ function Env(t, e) {
         if ("object" == typeof t) {
           if (this.isLoon()) {
             let e = t.openUrl || t.url || t["open-url"],
-              s = t.mediaUrl || t["media-url"];
+                s = t.mediaUrl || t["media-url"];
             return {
               openUrl: e,
               mediaUrl: s
@@ -468,7 +528,7 @@ function Env(t, e) {
           }
           if (this.isQuanX()) {
             let e = t["open-url"] || t.url || t.openUrl,
-              s = t["media-url"] || t.mediaUrl;
+                s = t["media-url"] || t.mediaUrl;
             return {
               "open-url": e,
               "media-url": s
@@ -499,7 +559,7 @@ function Env(t, e) {
     }
     done(t = {}) {
       const e = (new Date).getTime(),
-        s = (e - this.startTime) / 1e3;
+          s = (e - this.startTime) / 1e3;
       this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t)
     }
   }(t, e)
