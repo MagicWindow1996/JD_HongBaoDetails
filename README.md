@@ -3,8 +3,7 @@
 ![](https://greasyfork.s3.us-east-2.amazonaws.com/qjktyrvnnwz8mlj4we7xspyhpzi2)
 
 ##  HBDetail.js
-nodejs，圈X用户可使用
-与LXK 的脚本可共存<br>
+nodejs，圈X用户可使用<br>
 用来查看每个账户的今明后天各个平台红包详情<br><br>
 <b>环境变量</b><br>
 红包详情通知等级 <b>HBDETAIL_NOTIFY_LEVEL</b><br>
