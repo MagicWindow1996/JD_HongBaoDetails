@@ -32,12 +32,6 @@ if ($.isNode()) {
     });
     return;
   }
-  // for (let i = 0; i < cookiesArr.length; i++) {
-  //   if (cookiesArr[i]) {
-  //     cookie = cookiesArr[i];
-  //     await getAssist();
-  //   }
-  // }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -76,11 +70,11 @@ if ($.isNode()) {
       $.done();
     })
 
-function openRedPacket() {
+function openRedPacket(redPacketId) {
   return new Promise((resolve) => {
     $.post(taskUrl('h5receiveRedpacket', {
       "clientInfo": {},
-      "redPacketId": 271771584
+      "redPacketId": redPacketId
     }), (err, resp, data) => {
       try {
         if (err) {
@@ -103,27 +97,6 @@ function openRedPacket() {
   })
 }
 
-function getAssist() {
-  return new Promise((resolve) => {
-    $.post(taskUrl('h5activityIndex', {
-      "clientInfo": {},
-      "isjdapp": 1
-    }), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`\n${$.name}: API查询请求失败 ‼️‼️`);
-          console.log(JSON.stringify(err));
-        } else {
-          redPacketId.push(JSON.parse(data).data.result.redpacketInfo.id);
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
 
 function assist(redPacketId) {
   return new Promise((resolve) => {
