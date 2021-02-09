@@ -51,7 +51,7 @@ if ($.isNode()) {
         }
         continue;
       }
-      for (let i = 0; i < redPacketId.length; i++) {
+      for (let i = 0; i < redPacketIds.length; i++) {
         await assist(redPacketIds[i]);
       }
     }
@@ -96,7 +96,6 @@ function openRedPacket(redPacketId) {
     })
   })
 }
-
 
 function assist(redPacketId) {
   return new Promise((resolve) => {
