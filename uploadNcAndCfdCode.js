@@ -131,14 +131,13 @@ function submitNc(userName) {
         }
         try {
             $.post({
-                    url: `https://api.ninesix.cc/api/jx-nc/${$.info.smp}/${encodeURIComponent(userName)}?active=${$.info.active}`,
+                    url: `https://api.ninesix.cc/api/jx-nc/${$.info.smp}/${encodeURIComponent(userName)}?active=${$.info.active}&joinnum=${$.info.joinnum}`,
                     timeout: 10000
                 },
                 (err, resp, _data) => {
                     try {
                         const {
-                            code,
-                            //data = {}
+                            code
                         } = JSON.parse(_data);
                         if (code == 200) {
                             console.log(userName + '----京喜农场：提交成功');
@@ -306,7 +305,7 @@ function assist1(code, nickName) {
                     } = {}
                 } = JSON.parse(data);
 
-                $.log(nickName + `【👬普通助力】助力：${sErrMsg}${$.showLog ? data : ''}` + code);
+                //$.log(nickName + `【👬普通助力】助力：${sErrMsg}${$.showLog ? data : ''}`);
             } catch (e) {
                 $.logErr(e, resp);
             } finally {
@@ -330,7 +329,7 @@ function assist2(code, nickName) {
                         const {
                             sErrMsg
                         } = JSON.parse(data);
-                        $.log(nickName + `【🏝寻宝大作战】助力：${sErrMsg}${$.showLog ? data : ''}` + code);
+                        // $.log(nickName + `【🏝寻宝大作战】助力：${sErrMsg}${$.showLog ? data : ''}`);
                     } catch (e) {
                         $.logErr(e, resp);
                     } finally {
