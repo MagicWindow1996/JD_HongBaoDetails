@@ -3,7 +3,7 @@
   "description": "https://github.com/Aerozb/JD_HongBaoDetails",
   "task": [
     "0 9,20 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/main/HBDetail.js, tag=红包总额及过期详情, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true",
-    "1 0,1 * * * https://github.com/Aerozb/JD_HongBaoDetails/blob/main/jd_redPacketAssist.js, tag=京东全民开红包助力, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true",
+    "1 0,12 * * * https://github.com/Aerozb/JD_HongBaoDetails/blob/main/jd_redPacketAssist.js, tag=京东全民开红包助力, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true",
     "1 */2 * * * https://raw.githubusercontent.com/Aerozb/JD_HongBaoDetails/main/uploadNcAndCfdCode.js, tag=京喜农场和财富岛互助码提交, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxnc.png, enabled=true",
     "1 2,7,12 * * * https://github.com/Aerozb/JD_HongBaoDetails/blob/main/jd_newYearMoney.js, tag=京东压岁钱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true",
   ]
