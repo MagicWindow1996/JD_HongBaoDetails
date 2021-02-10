@@ -9,7 +9,7 @@ let ptTokenArr = [],
 Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
 })
-console.log(process.env.ATJ_PT_TOKEN);
+console.log(process.env);
 ptTokenArr = process.env.ATJ_PT_TOKEN.split('&');
 !(async () => {
     for (let i = 0; i < cookiesArr.length; i++) {
