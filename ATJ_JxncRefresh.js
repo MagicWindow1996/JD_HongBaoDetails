@@ -4,19 +4,21 @@ const jdCookieNode = require('./jdCookie.js');
 
 let cookiesArr = [],
     cookie = '';
-
+let ptTokenArr = [],
+    ptToken = '';
 Object.keys(jdCookieNode).forEach((item) => {
-        cookiesArr.push(jdCookieNode[item])
-    })
-
-    !(async () => {
-        for (let i = 0; i < cookiesArr.length; i++) {
-            if (cookiesArr[i]) {
-                cookie = cookiesArr[i];
-                await refresh();
-            }
+    cookiesArr.push(jdCookieNode[item])
+})
+ptTokenArr=process.env.ATJ_PT_TOKEN.split('&');
+!(async () => {
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            cookie = cookiesArr[i];
+            ptToken = ptTokenArr[i];
+            await refresh();
         }
-    })()
+    }
+})()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
     })
@@ -45,10 +47,10 @@ function refresh() {
 
 function taskUrl() {
     return {
-        url: `http://tbapi.url66.cn/tbapi/jxfarm.php?do=share&token=` + process.env.ATJ_TOKEN,
+        url: `http://tbapi.url66.cn/tbapi/jxfarm.php?do=share&token=52200`,
         headers: {
             "Host": "tbapi.url66.cn",
-            "Cookie": cookie,
+            "Cookie": cookie + 'pt_token=' + ptToken + ';'
         }
     }
 }
