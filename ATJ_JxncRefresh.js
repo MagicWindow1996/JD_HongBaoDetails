@@ -4,19 +4,14 @@ const jdCookieNode = require('./jdCookie.js');
 
 let cookiesArr = [],
     cookie = '';
-let ptTokenArr = [],
-    ptToken = '';
 Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
 })
-ptToken = process.env.ATJ_PT_TOKEN;
-console.log(ptToken)
-//ptTokenArr = process.env.ATJ_PT_TOKEN.split('&');
+
 !(async () => {
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
-            ptToken = ptTokenArr[i];
             await refresh();
         }
     }
@@ -52,7 +47,7 @@ function taskUrl() {
         url: `http://tbapi.url66.cn/tbapi/jxfarm.php?do=share&token=52200`,
         headers: {
             "Host": "tbapi.url66.cn",
-            "Cookie": cookie + 'pt_token=' + ptToken + ';'
+            "Cookie": cookie + 'pt_token=1;'
         }
     }
 }
