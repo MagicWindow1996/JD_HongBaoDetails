@@ -1,5 +1,7 @@
 /*
 https: //github.com/Aerozb/JD_HongBaoDetails
+  === === === === QuantumultX === === === === == [task_local]# 京东京喜红包详情
+  "1 0,12 * * * https://github.com/Aerozb/JD_HongBaoDetails/blob/main/jd_redPacketAssist.js, tag=京东全民开红包助力, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true"
  */
 const $ = new Env('京东全民开红包助力');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -9,7 +11,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
-let redPacketIds = [ 271970401, 271994215, 271972990  ];
+let redPacketIds = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -32,6 +34,7 @@ if ($.isNode()) {
     });
     return;
   }
+  await readRedPacketIds();
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -56,6 +59,7 @@ if ($.isNode()) {
       }
     }
   }
+  console.log('\n');
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -96,6 +100,48 @@ function openRedPacket(redPacketId) {
     })
   })
 }
+
+function readRedPacketIds() {
+  return new Promise((resolve) => {
+    $.get({
+      url: 'https://api.bmob.cn/1/classes/jd_redPacketId/2b5cd70f5b',
+      headers: {
+        "Host": "api.bmob.cn",
+        "X-Bmob-Application-Id": "e7e8b65c2ae5e562be8cea6c862f3cae",
+        "X-Bmob-REST-API-Key": "694dc3b9a56f7eb543bdcccb8aef0dac ",
+        "Content-Type": "application/json"
+      }
+    }, async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`);
+        } else {
+          String.prototype.trim = function (char, type) {
+            if (char) {
+              if (type == 'left') {
+                return this.replace(new RegExp('^\\' + char + '+', 'g'), '');
+              } else if (type == 'right') {
+                return this.replace(new RegExp('\\' + char + '+$', 'g'), '');
+              }
+              return this.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '');
+            }
+            return this.replace(/^\s+|\s+$/g, '');
+          };
+          redPacketIdJson = JSON.parse(data).redPacketIdJson;
+          redPacketIdJson = redPacketIdJson.trim('[', 'left').trim(']', 'right');
+          redPacketIds = redPacketIdJson.split(',');
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+
 
 function assist(redPacketId) {
   return new Promise((resolve) => {
