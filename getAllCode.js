@@ -81,15 +81,15 @@ if ($.isNode()) {
     jdBookShop = jdBookShop.substring(0, jdBookShop.lastIndexOf('&'));
     jxNc = jxNc.substring(0, jxNc.lastIndexOf('&'));
 
-    console.log('/submit_ddfactory_code ' + jdFactory);
+    console.log('/submit_activity_codes  ddfactory ' + jdFactory);
 
-    console.log('/submit_bean_code ' + jdBean);
+    console.log('/submit_activity_codes bean ' + jdBean);
 
-    console.log('/submit_farm_code ' + jdFruit);
+    console.log('/submit_activity_codes farm ' + jdFruit);
 
-    console.log('/submit_pet_code ' + jdPet);
+    console.log('/submit_activity_codes pet ' + jdPet);
 
-    console.log('/submit_jxfactory_code ' + jxFactory);
+    console.log('/submit_activity_codes jxfactory ' + jxFactory);
 
     console.log('/jdzz ' + jdZz);
 
